@@ -3,18 +3,30 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import './plugins/element.js'
-import '../config/ele'
 Vue.config.productionTip = false
-import 'element-ui/lib/theme-chalk/base.css';
-import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
+import vshare from 'vshare'
+
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import 'swiper/dist/css/swiper.css'
 import Axios from 'axios'
 import qs from 'qs'
+
+
+
+
 import BaiduMap from 'vue-baidu-map'
+import VueAreaLinkage from 'vue-area-linkage';
+import { provinceAndCityData, regionData, provinceAndCityDataPlus, regionDataPlus, CodeToText, TextToCode } from 'element-china-area-data'
+Vue.use(VueAreaLinkage)
+Vue.use(provinceAndCityData)
+Vue.use(regionData)
+Vue.use(provinceAndCityDataPlus)
+Vue.use(regionDataPlus)
+Vue.use(CodeToText)
+Vue.use(TextToCode)
 Vue.prototype.$axios=Axios
 // 全局网址http://www.wwtliu.com
-//Axios.defaults.baseURL = 'http://www.wwtliu.com';
+Axios.defaults.baseURL = 'http://192.168.1.119:8080/';
 // Axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
 Axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 Vue.config.productionTip = false
@@ -43,12 +55,23 @@ Axios.interceptors.response.use(function (response) {
 });
 /* eslint-disable no-new */
 Vue.use(VueAwesomeSwiper)
-Vue.component(CollapseTransition.name, CollapseTransition)
 
 Vue.use(BaiduMap, {
   // ak 是在百度地图开发者平台申请的密钥 详见 http://lbsyun.baidu.com/apiconsole/key */
   ak: 'pdte5B83N8xwZnARmKqMZiF7Cu8b15YX'
 })
+
+
+Vue.use(require('vshare'))
+
+router.beforeEach((to, form, next) => {
+  if(form.path=="/homelist"&&to.path=="/homelist"){
+    router.go(0)
+  }
+  next();
+})
+
+
 new Vue({
   router,
   store,

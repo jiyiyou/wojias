@@ -1,7 +1,9 @@
 <template>
   <div id="app">
   <headers/>
+
   <router-view/>
+
   <footers/>
   </div>
 </template>
@@ -12,13 +14,37 @@ import footers from"./views/components/footers"
 // import HelloWorld from './components/HelloWorld.vue'
 
 export default {
+  activated: function() {
+    this.getCase()
+  },
   name: 'app',
+    methods: {
+     formatData(now) {
+          var date = new Date(now);
+          var year = date.getFullYear();
+          var month = date.getMonth() + 1;
+          var day = date.getDate();
+          var month = month < 10 ? "0" + month : month;
+          var day = day < 10 ? "0" + day : day;
+          return year + '-' + month + '-' + day;
+        },
+    getHrefParam(key) { /*获取地址栏参数*/
+      let s = window.location.href;
+      let reg = new RegExp(key + "=\\w+");
+      let rs = reg.exec(s);
+      if (rs === null || rs === undefined) {
+        return "";
+      } else {
+        return rs[0].split("=")[1];
+      }
+    },},
   components: {
     headers,
     footers,
     // HelloWorld
   }
 }
+
 </script>
 
 <style>
@@ -63,27 +89,6 @@ input::-webkit-input-placeholder{ color: #666;}
 /****主体宽度****/
 .wrap{width:1200px;margin: 0 auto;}
 
-.head{height: 70px;background-color:#31363a; padding: 0 40px;box-sizing: border-box;position: relative}
-.head .logo {display:inline-block;line-height: 70px;margin-right:15px}
-.head .logo img{vertical-align: middle}
-.head .head-left .el-button{background: transparent;border:none;padding: 7px 10px;font-size: 14px;    border-radius: 2px;}
-.head .head-left .el-button i{font-size: 12px;color:#b6b6b6 }
-.cityactive{color: #fff}
-.city-tit{color: #b6b6b6;font-size: 12px;}
-.transition-box a{display:inline-block;font-size: 12px;margin-right: 20px;line-height: 20px;margin-top:7px;transition: all .4s}
-.transition-box a:hover{color:#1ead69 }
-.el-button:hover{color:#1ead69}
-.el-button:focus{color: #fff}
-.el-button:focus, .el-button:active{background-color: #fff}
-.head .head-left .city{display: inline-block;}
-.cityactive{transition: all .4s}
-.cityactive.active{background-color: #fff!important;color: #333;}
-.head-right{width: 55%}
-.nav-box a{color: #fff;font-size: 18px;line-height: 70px;display:inline-block;margin-right:35px;transition: all .4s}
-.nav-box a:hover{color: #1ead69;}
-.loginbox{width: 130px;height:30px;border:1px solid #1ead69;border-radius:50px;margin-top:17px;overflow: hidden}
-.loginbox .login{color: #1ead69;display:block;width: 50%;border-right: 1px solid #1ead69;box-sizing: border-box;text-align: center;line-height: 30px}
-.loginbox .register{background:  #1ead69;display:block;width: 50%;border-right: 1px solid #1ead69;box-sizing: border-box;text-align: center;line-height: 30px;color: #fff}
 .banner>img{display: block;width: 100%}
 
 
