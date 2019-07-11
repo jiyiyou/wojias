@@ -26,7 +26,7 @@
 		data() {
 			return {
 				newArr: [],
-				ids: this.$route.query.id,
+				ids: this.$route.query.ids,
 				idtop: [],
 				idnext: [],
 			}
@@ -158,6 +158,7 @@
 	}
 	
 	.cont p {
-		line-height: 1.6
+		line-height: 1.6;
+		word-wrap: break-word;
 	}
 </style>

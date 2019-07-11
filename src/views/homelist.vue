@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="homelist">
 		<seach/>
 
 		<div class="container">
@@ -7,19 +7,19 @@
 				<li class="cont">
 					<div class="title">位置</div>
 					<ul class="term">
-						<li @click="changlist('')" class="active">不限</li>
-						<li v-for="(term , index) in navalist" @click="changlist(index)" :class="{ active: term.active }">{{term.title}}
+						<li @click="changlist('123',0)" :class="{ active: activea }">不限</li>
+						<li v-for="(term , index) in navalist" @click="changlist(index,1)" :class="{ active: term.active }">{{term.title}}
 						</li>
 					</ul>
 				</li>
 				<li class="cont">
 					<div class="title">面积</div>
 					<ul class="term">
-						<li @click="oklists('','')" class="active">不限</li>
-						<li @click="oklists(0,100)">0-100m²</li>
-						<li @click="oklists(100,200)">100-200m²</li>
-						<li @click="oklists(200,300)">200-300m²</li>
-						<li @click="oklists(300,400)">300-400m²</li>
+						<li @click="oklists('','',0)" :class="{ active:  m[0].active }">不限</li>
+						<li :class="{ active: m[1].active }" @click="oklists(0,100,1)">0-100m²</li>
+						<li :class="{ active:  m[2].active }" @click="oklists(100,200,2)">100-200m²</li>
+						<li :class="{ active:  m[3].active }" @click="oklists(200,300,3)">200-300m²</li>
+						<li :class="{ active:  m[4].active }" @click="oklists(300,400,4)">300-400m²</li>
 						<li class="inputbox"><input type="text" v-model="seachinput[0].numas" @keyup="numa(0)" class="inputseach" />- <input type="text" v-model="seachinput[1].numas" @keyup="numa(1)" class="inputseach" />m²
 							<span @click="oklists(seachinput[0].numas,seachinput[1].numas)" class="okbtn">确定</span></li>
 					</ul>
@@ -27,11 +27,11 @@
 				<li class="cont">
 					<div class="title">单价</div>
 					<ul class="term">
-						<li @click="oklistjgs('')" class="active">不限</li>
-						<li @click="oklistjgs(0,3)">3元以下</li>
-						<li @click="oklistjgs(3,4)">3-4元</li>
-						<li @click="oklistjgs(4,5)">4-5元</li>
-						<li @click="oklistjgs(5,7)">5-7元</li>
+						<li @click="oklistjgs('','',0)" :class="{ active:  money[0].active }">不限</li>
+						<li :class="{ active:  money[1].active }" @click="oklistjgs(0,3,1)">3元以下</li>
+						<li :class="{ active:  money[2].active }" @click="oklistjgs(3,4,2)">3-4元</li>
+						<li :class="{ active:  money[3].active }" @click="oklistjgs(4,5,3)">4-5元</li>
+						<li :class="{ active:  money[4].active }" @click="oklistjgs(5,7,4)">5-7元</li>
 						<li class="inputbox"><input type="text" v-model="seachinput[2].numas" @keyup="numa(2)" class="inputseach" />- <input type="text" v-model="seachinput[3].numas" @keyup="numa(3)" class="inputseach" />元
 							<span @click="oklistjgs(seachinput[2].numas,seachinput[3].numas)" class="okbtn">确定</span>
 						</li>
@@ -56,6 +56,7 @@
 				</li>
 			</ul>
 			<div class="house-list-main">
+				<p class="err" v-show="showss">暂无数据</p>
 				<ul class="house-list">
 					<div v-if="this.homeArr.length!=0">
 						<template v-for="(item,index) in homeArr">
@@ -63,13 +64,13 @@
 							<div class="house-cont">
 								<div class="img"><img :src="item.mansion_picture" alt=""></div>
 								<div class="info">
-									<router-link :to="{path:'details',query: { id: index}}" tag="a" class="title">
-										{{item.mansion_name}}
-									</router-link>
+<!--									<router-link :to="{path:'details',query: { id: index}}" tag="a" class="title">-->
+									<a class="title">		{{item.mansion_name}}</a>
+<!--									</router-link>-->
 									<div class="position"><i class="el-icon-location-outline"></i><span style="margin: 0 20px 0 4px">{{item.region_shname}}-{{item.region_cityname}}-{{item.region_name}}</span>
 									</div>
 									<div class="person">近期有{{item.subscribeCount}}人预约</div>
-									<div><span v-for="(items,indexs) in item.housesNews" class="spacebox">{{items.office_space}}m²</span>
+									<div><span v-for="(items,indexs) in item.housesNews" class="spacebox" v-show="indexs<5">{{items.office_space}}m²</span>
 										<span class="spacebox">...</span></div>
 								</div>
 								<div class="price"><span class="num">{{item.housesNews[0].money}}</span>元/m²/天</div>
@@ -78,6 +79,12 @@
 							</div>
 						</template>
 						<!--<el-pagination small layout="prev, pager, next" :total="50"> </el-pagination>-->
+						<el-pagination
+										:page-size="10"
+										background
+										layout="prev, pager, next"
+										:total=total @current-change="changnum(currentPagea)" :current-page.sync="currentPagea">
+						</el-pagination>
 					</div>
 					<div v-if="this.housesNewArr.length!=0">
 					<template v-for="(item,index) in housesNewArr">
@@ -85,9 +92,9 @@
 						<div class="house-cont">
 							<div class="img"><img :src="item.house_picture" alt=""></div>
 							<div class="info">
-								<router-link :to="{path:'details',query: { id: index}}" tag="a" class="title">
-									{{item.work_name}}
-								</router-link>
+<!--								<router-link :to="{path:'details',query: { id: index}}" tag="a" class="title">-->
+								<a class="title">{{item.work_name}}</a>
+<!--								</router-link>-->
 								<div class="position"><span>所在楼层：{{item.location}}层</span>[{{item.office_space}}m² - {{item.fitment}}]
 								</div>
 								<div class="person">近期有{{item.subscribeCount}}人预约</div>
@@ -95,12 +102,14 @@
 									<span class="spacebox">...</span></div>
 							</div>
 							<div class="price"><span class="num">{{item.money}}</span>{{item.money_unit}}</div>
-							<router-link :to="{path:'details',query: { id: item.building_id}}" tag="a" class="goto">查看详情
+							<router-link :to="{path:'details',query: { id: item.id}}" tag="a" class="goto">查看详情
 							</router-link>
 						</div>
 
 					</template>
-					<!--<el-pagination small layout="prev, pager, next" :total="50"> </el-pagination>-->
+
+
+					<el-pagination 	background layout="prev, pager, next" :page-size="10"  :current-page.sync="currentPagea" :total=total @current-change="changnuma(currentPagea)"> </el-pagination>
 					</div>
 				</ul>
 				<div class="aside">
@@ -136,6 +145,15 @@
 		name: "homelist",
 		data() {
 			return {
+				m:[{active:true},{active:false},{active:false},{active:false},{active:false},{active:false},{active:false}],
+				money:[{active:true},{active:false},{active:false},{active:false},{active:false},{active:false},{active:false}],
+				activec:true,
+				activeb:true,
+				activea:true,
+				total:0,
+				currentPage: 1,
+				currentPagea: 1,
+				showss:false,
 				city: "",
 				homeArr: [],
 				seachinput: [{
@@ -157,6 +175,7 @@
 				mjb: '',
 				jga: '',
 				jgb: '',
+				wz:'',
 				citynum: null,
 				housesNewArr: [],
 				httpss: "gc",
@@ -164,8 +183,9 @@
 		},
 
 		methods: {
+			changnum(num) {  this.getHomelist(this.wz,num,"no")   },
+			changnuma(num) {	this.gethousesNewlist(this.wz,num,"no")  },
 			numa(num) {
-
 				let fix
 				if(typeof this.seachinput[num].numas === "string") {
 					fix = Number(this.seachinput[num].numas.replace(/\D/g, ''))
@@ -173,24 +193,46 @@
 				}
 
 			},
-			changlist(num) {
+			changlist(num,nums) {
+
+				if(num=="123"){
+					this.navalist[0].active = !this.navalist[0].active
+					this.activea=true
+					if(this.httpss == 'gc') {
+						this.getHomelist("",1)
+					}
+					if(this.httpss == 'yxhf') {
+						this.gethousesNewlist("",1)
+					}}
+				else{
+					this.activea=false
 				for(let i = 0; i < this.navalist.length; i++) {
 					this.navalist[i].active = false
 				}
-				this.navalist[num].active = !this.navalist[num].active
+					if(num==0){
+						this.navalist[0].active = !this.navalist[0].active
+					}else{this.navalist[num].active = !this.navalist[num].active}
+
+					if(this.httpss == 'gc') {
+					//	alert(this.navalist[num].area_id)
+						this.getHomelist(this.navalist[num].area_id,1)
+					}
+					if(this.httpss == 'yxhf') {
+						this.gethousesNewlist(this.navalist[num].area_id,1)
+					}
+				}
 				console.log(this.navalist)
-				if(this.httpss == 'gc') {
-					this.getHomelist(this.navalist[num].area_id)
-				}
-				if(this.httpss == 'yxhf') {
-					// alert(123444)
-					this.gethousesNewlist(this.navalist[num].area_id)
-				}
+
 
 			},
 
 			//点击价格重载
-			oklistjgs(num1, num2) {
+			oklistjgs(num1, num2,nums) {
+				for(let i=0;i<this.money.length;i++){
+					this.money[i].active=false
+				}
+				this.money[nums].active=true
+
 				this.jga = num1,
 					this.jgb = num2
 				console.log(this.wz, this.mja, this.mjb, this.jga, this.jgb, )
@@ -200,18 +242,22 @@
 					this.$axios("building/listBuildingByCondition.action", {
 							params: {
 								filter: 'cityId=' + this.cityIds + '&regionId=' + this.wz + '&startSpace=' + this.mja + '&endSpace=' + this.mja + '&startMoney=' + this.jga + '&endMoney=' + this.jgb + '&fitment=' + '',
-								pageSize: 5,
+								pageSize: 10,
 								pageNum: 1,
 							}
 						})
 						.then(res => {
+							this.currentPagea=1
+							this.total=res.data.data.total
 							console.log(res)
 							if(res.data.code == -1) {
-								alert("暂无数据")
+							//	alert("暂无数据")
+								this.showss=true
 								this.homeArr = []
 								return false
 							}
 							if(res.data.code == 0) {
+								this.showss=false
 								console.log(res.data.data.list);
 								this.homeArr = res.data.data.list
 							}
@@ -223,11 +269,16 @@
 				}
 				if(this.httpss == 'yxhf') {
 					//alert(123)
-					this.gethousesNewlist('')
+					this.gethousesNewlist(this.wz,1)
 				}
 			},
 			//点击面积重载
-			oklists(num1, num2) {
+			oklists(num1, num2,nums) {
+				for(let i=0;i<this.m.length;i++){
+					this.m[i].active=false
+				}
+				this.m[nums].active=true
+
 				this.mja = num1,
 					this.mjb = num2,
 					console.log(this.wz, this.mja, this.mjb, this.jga, this.jgb, )
@@ -237,18 +288,23 @@
 					this.$axios("building/listBuildingByCondition.action", {
 							params: {
 								filter: 'cityId=' + this.cityIds + '&regionId=' + this.wz + '&startSpace=' + this.mja + '&endSpace=' + this.mjb + '&startMoney=' + this.jga + '&endMoney=' + this.jgb + '&fitment=' + '',
-								pageSize: 5,
+								pageSize: 10,
 								pageNum: 1,
 							}
 						})
 						.then(res => {
+							this.currentPagea=1
+							this.total=res.data.data.total
 							console.log(res)
 							if(res.data.code == -1) {
-								alert("暂无数据")
+								//alert("暂无数据")
+								//	alert("暂无数据")
+								this.showss=true
 								this.homeArr = []
 								return false
 							}
 							if(res.data.code == 0) {
+								this.showss=false
 								console.log(res.data.data.list);
 								this.homeArr = res.data.data.list
 							}
@@ -259,13 +315,13 @@
 						})
 				}
 				if(this.httpss == 'yxhf') {
-					// alert(12333)
-					this.gethousesNewlist('')
+					this.gethousesNewlist(this.wz,1)
 				}
 			},
 
 			cityId() {
-				console.log(sessionStorage.getItem("Skycity"))
+				// alert(123)
+				// alert(sessionStorage.getItem("Skycity"))
 
 				this.$axios.post("building/listByHouseCount.action", {
 						cityId: this.cityIds,
@@ -299,7 +355,7 @@
 
 			},
 			//点击位置重载
-			getHomelist(ids) {
+			getHomelist(ids ,num ,no) {
 				//alert(ids)
 				this.wz = ids
 				console.log(this.wz, this.mja, this.mjb, this.jga, this.jgb, )
@@ -309,18 +365,23 @@
 				this.$axios("building/listBuildingByCondition.action", {
 						params: {
 							filter: 'cityId=' + this.cityIds + '&regionId=' + this.wz + '&startSpace=' + "" + '&endSpace=' + "" + '&startMoney=' + "" + '&endMoney=' + "" + '&fitment=' + '',
-							pageSize: 5,
-							pageNum: 1,
+							pageSize: 10,
+							pageNum:num,
 						}
 					})
 					.then(res => {
 						// console.log(res)
+						if(no!="no"){this.currentPagea=1}
+
+						this.total=res.data.data.total
 						if(res.data.code == -1) {
-							alert("暂无数据")
+							//alert("暂无数据")
+							this.showss=true
 							this.homeArr = []
 							return false
 						}
 						if(res.data.code == 0) {
+							this.showss=false
 							console.log(res.data.data.list);
 							this.homeArr = res.data.data.list
 
@@ -332,27 +393,30 @@
 					})
 			},
 			//优选房源
-			gethousesNewlist(ids) {
+			gethousesNewlist(ids,num,no) {
 				this.wz = ids
 				console.log(this.wz, this.mja, this.mjb, this.jga, this.jgb, )
 				this.city = this.cityIds
 				this.$axios("housesNew/listHousesNewByCondition.action", {
 						params: {
 							filter: 'cityId=' + this.cityIds + '&regionId=' + this.wz + '&startSpace=' + this.mja + '&endSpace=' + this.mjb + '&startMoney=' + this.jga + '&endMoney=' + this.jgb + '&fitment=' + '',
-							pageSize: 5,
-							pageNum: 1,
+							pageSize: 10,
+							pageNum: num,
 						}
 					})
 					.then(res => {
-						console.log(112233)
-						console.log(res)
+						if(no!="no"){this.currentPagea=1}
+
+						this.total=res.data.data.total
+
 						if(res.data.code == -1) {
-							alert("暂无数据")
+							//alert("暂无数据")
+							this.showss=true
 							this.housesNewArr = []
 							return false
 						}
 						if(res.data.code == 0) {
-							console.log(999999999);
+							this.showss=false
 							this.housesNewArr = res.data.data.list
 							for(let i = 0; i < this.housesNewArr.length; i++) {
 								console.log(this.housesNewArr[i].money_unit)
@@ -402,10 +466,11 @@
 		mounted() {
 			if(this.$route.query.id == 'yxhf') {
 				this.httpss = 'yxhf'
-				this.gethousesNewlist('')
+				this.gethousesNewlist('',1)
 
 			} else {
-				this.getHomelist('')
+
+				this.getHomelist('',1)
 
 			}
 
@@ -420,6 +485,14 @@
 </script>
 
 <style scoped>
+	.homelist >>> .el-pagination{text-align:center;margin:60px auto}
+	.err{
+		display: block;
+		width: 100%;
+		text-align: center;
+		margin-top: 50px;
+		color: #6f7170;
+	}
 	.okbtn {
 		display: inline-block;
 		padding: 4px 6px;
@@ -582,7 +655,7 @@
 	}
 	
 	.house-cont .price {
-		width: 120px;
+		width: 150px;
 		font-size: 14px;
 		color: #666;
 		line-height: 180px;

@@ -4,10 +4,10 @@
             <img src="../assets/public/newbg.png" alt="" class="bg">
             <div class="wrap flex">
                 <div class="left">
-                    <div class="newcontbox flex" v-for="(item , index) in newArr" :class="{active : index == 0}">
+                    <div class="newcontbox flex" v-if="newArr.length>0" v-for="(item , index) in newArr" :class="{active : index == 0}">
                         <div class="imgbox"><img :src="item.jour_pic" alt=""></div>
                         <div class="newcont">
-                            <router-link :to="{path:'news',query: { id: item.id}}" tag="a">
+                            <router-link :to="{path:'news',query: { ids: item.id}}" tag="a">
                                 <p class="name">{{item.title}} </p>
                                 <p class="cont">{{item.content}}</p>
                                 <p class="data">{{formatData(item.time)}}</p>
@@ -19,13 +19,13 @@
                 <div class="right">
                     <div class="titbox">
                         <img src="../assets/public/mewico2.png" alt="">
-                        <router-link :to="{path:'new',query: { id:1}}" tag="div" class="tit">
+                        <router-link :to="{path:'new',query: { ids:1}}" tag="div" class="tit">
                             <h1 class="name">行业风云</h1>
                             <p class="sname">INDUSTRY STORM</p>
                         </router-link>
                         <p class="cont">
                             “去年北京地区公积金缴存、提取、贷款三大指标均出现上涨，其中利用公积金的个人住房贷款额更同比去年增长55.2%。来自北京住房公积金管理中心的《北京住房公积金2018年年度报告》发布了如上数据。</p>
-                        <router-link :to="{path:'new',query: { id:1}}" tag="p" class="more">了解更多></router-link>
+                        <router-link :to="{path:'new',query: { ids:1}}" tag="p" class="more">了解更多></router-link>
                     </div>
                 </div>
             </div>
@@ -38,20 +38,21 @@
                 <div class="right">
                     <div class="titbox">
                         <img src="../assets/public/mewico2.png" alt="">
-                        <router-link :to="{path:'new',query: { id:2}}" tag="div" class="tit">
+                        <router-link :to="{path:'new',query: { ids:2}}" tag="div" class="tit">
                             <h1 class="name">找房攻略</h1>
                             <p class="sname">INDUSTRY STORM</p>
                         </router-link>
                         <p class="cont">
                             “去年北京地区公积金缴存、提取、贷款三大指标均出现上涨，其中利用公积金的个人住房贷款额更同比去年增长55.2%。来自北京住房公积金管理中心的《北京住房公积金2018年年度报告》发布了如上数据。</p>
-                        <router-link :to="{path:'new',query: { id:2}}" tag="p" class="more">了解更多></router-link>
+                        <router-link :to="{path:'new',query: { ids:2}}" tag="p" class="more">了解更多></router-link>
                     </div>
                 </div>
                 <div class="left">
-                    <div class="newcontbox flex" v-for="(itema , indexa) in newArra" :class="{active : indexa == 0}">
+
+                    <div class="newcontbox flex" v-if="newArra.length>0" v-for="(itema , indexa) in newArra" :class="{active : indexa == 0}">
                         <div class="imgbox"><img :src="itema.jour_pic" alt=""></div>
                         <div class="newcont">
-                            <router-link :to="{path:'news',query: { id: itema.id}}" tag="a">
+                            <router-link :to="{path:'news',query: { ids: itema.id}}" tag="a">
                                 <p class="name">{{itema.title}} </p>
                                 <p class="cont">{{itema.content}}</p>
                                 <p class="data">{{formatData(itema.time)}}</p>
@@ -95,7 +96,10 @@
                     limit: 2
                 })
                     .then(res => {
-                        this.newArr = res.data.data
+                        if(res.data.data!="null"){
+                            this.newArr = res.data.data
+                        }
+
                         console.log(this.newArr);
                         //console.log(this.formatData(res.data.data.time));
                     })
@@ -111,7 +115,11 @@
                     limit: 2
                 })
                     .then(res => {
-                        this.newArra = res.data.data
+                        if(res.data.data=='null'){
+                            this.newArra =[]
+                        }
+                        else{this.newArra = res.data.data}
+
                         console.log(this.newArra);
                         //console.log(this.formatData(res.data.data.time));
                     })

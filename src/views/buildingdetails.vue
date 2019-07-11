@@ -4,10 +4,8 @@
         <div class="section1">
             <div class="Housename flex wrap">
                 <h1 class="name">{{gethomebox.mansion_name}}</h1>
-                <p class="right" @click="star()" v-if="active==0"><span><i class="el-icon-star-on"></i>收藏</span><span><i
-                        class="el-icon-share"></i>分享</span></p>
-                <p class="right"  v-if="active==1"><span><i class="el-icon-star-on" style="color: #e4e82c"></i>收藏</span><span><i
-                        class="el-icon-share"></i>分享</span></p>
+                <p class="right" @click="star()" v-if="active==0"><span><i class="el-icon-star-on"></i>收藏</span></p>
+                <p class="right"  v-if="active==1"><span><i class="el-icon-star-on" style="color: #e4e82c"></i>收藏</span></p>
             </div>
             <div class="housecont flex wrap">
                 <div class="left">
@@ -200,7 +198,7 @@
                         <span>猜你喜欢</span>
                     </div>
                     <div class="sec2listbox">
-                        <div class="sec2list" v-for="(item , index) in likelist">
+                        <router-link :to="{path:'details',query: { id: item.id}}" class="sec2list" v-for="(item , index) in likelist">
 
                             <img :src="item.house_picture" alt="">
                             <div class="cont">
@@ -209,12 +207,13 @@
                                     <p><span>{{item.money}}</span>{{item.money_unit}}</p></div>
 
                             </div>
-                        </div>
+                        </router-link>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
 </template>
 
 <script>
@@ -281,7 +280,13 @@
         },
         methods: {
             star(){
-               // alert(sessionStorage.getItem("Skytell"))
+               if(sessionStorage.getItem("Skytell")==null){
+                   this.$message({
+                       message: '请先登录后再收藏',
+                       type: 'warning'
+                   });
+                   return false
+               }
                 this.$axios.post("attention/insertSelective.action", {
                     user_phone:sessionStorage.getItem("Skytell"),
                     houses_new_id:this.gethomebox.id,
@@ -302,7 +307,7 @@
             },
 
             getyzm() {
-               alert(this.tell)
+               // alert(this.tell)
                 if (/^[1][3,4,5,6,7,8,9][0-9]{9}$/.test(this.tell)) {
                     this.$axios.post("entrustsee/getmasge.action", {
                         phone_number:this.tell,
@@ -333,9 +338,11 @@
 
             },
             geform() {
-                // alert(this.housesNewArr.building_id)
+               // alert(this.$route.query.id)
+                //return false
                 this.$axios.post("entrustsee/insert.action", {
-                    houses_new_id:this.gethomebox.building_id,
+                    houses_new_id:this.$route.query.id,
+                   // houses_new_id:this.gethomebox.building_id,
                     //broker_id:this.gethomebox.broker_id,
                     phone_number:this.tell,
                     validate:this.yzm,
@@ -370,7 +377,10 @@
 
                 })
                     .then(res => {
-                        this.likelist=res.data.data
+                        if(res.data.data!="null"){
+                            this.likelist=res.data.data
+                        }
+
                         for(let j=0;j<this.likelist.length;j++){
                             //alert(this.likelist[j].money_unit)
                             if(this.likelist[j].money_unit=="1"){
@@ -582,7 +592,7 @@ console.log(777777)
             mapClass(querys, regions, arr) {
                 console.log(123456789)
                 console.log()
-                this.$axios("http://api.map.baidu.com/place/v2/search?", {
+                this.$axios("https://api.map.baidu.com/place/v2/search?", {
                     params: {
                         query: querys,
                         location:this.gethomebox.latitude+','+this.gethomebox.longitude,
@@ -591,6 +601,7 @@ console.log(777777)
                         output: "json",
                         ak: "pdte5B83N8xwZnARmKqMZiF7Cu8b15YX"
                     }
+
                 })
                     .then(res => {
                         console.log(res)

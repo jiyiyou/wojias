@@ -1,6 +1,6 @@
 <template>
 	<div class="Entrust">
-		<img src="../assets/public/wt.png" alt="" class="bg">:rules="rules2" 
+		<img src="../assets/public/wt.png" alt="" class="bg">
 		<div class="form-box">
 			<el-form  status-icon :rules="rules2" >
 			<div class="demo-input-suffix">
@@ -84,6 +84,7 @@
 					});
 				}else{
 				this.$axios.post("delegation/insert.action", {
+					  city_id:sessionStorage.getItem("Skycityid"),
 						demand: this.formcont.Entrust,
 						user_name: this.formcont.username,
 						phone_number: this.formcont.tell
@@ -94,8 +95,11 @@
                             message: '提交成功',
                             type: 'success'
                         });
+
                           let timer = setInterval(() => {
-                                   location.replace(location)
+																		this.formcont.Entrust="",
+																		this.formcont.username="",
+																		this.formcont.tell=""
                                 }, 1200)
 
 					})

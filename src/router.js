@@ -12,7 +12,7 @@ import Homelist from './views/homelist.vue'
 import Mapbox from './views/mapbox.vue'
 import SupplierAllBack from './views/supplierAllBack.vue'
 import Collection from './views/Collection.vue'
-
+import seachList from './views/seachList.vue'
 
 Vue.use(Router)
 
@@ -35,14 +35,20 @@ Vue.use(Router)
 
 
 export default new Router({
-  mode: 'history',
-  base: process.env.BASE_URL,
+ // mode: 'history',
+ // base: process.env.BASE_URL,
   routes: [
     {
       path: '/',
       name: 'home',
       component: Home
     },
+    {
+      path: '/seachList',
+      name: 'seachList',
+      component: seachList
+    },
+
     {
       path: '/mapbox',
       name: 'mapbox',

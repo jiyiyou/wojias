@@ -7,7 +7,7 @@
 				<div class="newbox">
 
 					<div class="list flex" v-for="(item , indexa) in newArr">
-						<router-link :to="{path:'/news',query: { id: item.id}}" tag="div" class="flex">
+						<router-link :to="{path:'/news',query: { ids: item.id}}" tag="div" class="flex">
 							<div class="imgbox"><img src="../assets/public/newico.png" alt="">
 								<div class="data">
 									<p>{{item.times[2]}}</p><span>{{item.times[0]}}-{{item.times[1]}}</span>
@@ -58,7 +58,7 @@
 			},
 			getnewclass(classs) {
 				this.$axios.post("journalism/selectJour.action", {
-						genre: this.$route.query.id,
+						genre: this.$route.query.ids,
 						page: 1,
 						limit: 2
 					})

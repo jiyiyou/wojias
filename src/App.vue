@@ -2,7 +2,7 @@
   <div id="app">
   <headers/>
 
-  <router-view/>
+  <router-view :key="key"/>
 
   <footers/>
   </div>
@@ -38,6 +38,11 @@ export default {
         return rs[0].split("=")[1];
       }
     },},
+  computed: {
+    key() {
+      return this.$route.name !== undefined? this.$route.name + +new Date(): this.$route + +new Date()
+    }
+  },
   components: {
     headers,
     footers,

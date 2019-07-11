@@ -10,7 +10,7 @@ import VueAwesomeSwiper from 'vue-awesome-swiper'
 import 'swiper/dist/css/swiper.css'
 import Axios from 'axios'
 import qs from 'qs'
-
+import VueJsonp from 'vue-jsonp'
 
 
 
@@ -26,7 +26,7 @@ Vue.use(CodeToText)
 Vue.use(TextToCode)
 Vue.prototype.$axios=Axios
 // 全局网址http://www.wwtliu.com
-Axios.defaults.baseURL = 'http://192.168.1.119:8080/';
+Axios.defaults.baseURL = 'http://192.168.1.116:8080/';
 // Axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
 Axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 Vue.config.productionTip = false
@@ -65,9 +65,12 @@ Vue.use(BaiduMap, {
 Vue.use(require('vshare'))
 
 router.beforeEach((to, form, next) => {
-  if(form.path=="/homelist"&&to.path=="/homelist"){
-    router.go(0)
-  }
+  // if(form.path=="/homelist"&&to.path=="/homelist"){
+  //   router.go(0)
+  // }
+  // if(form.path=="/homelist"&&to.path=="/homelist"){
+  //
+  // }
   next();
 })
 

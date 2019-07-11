@@ -7,44 +7,46 @@
         <p class="nav" :class="{active : active == 1}" @click="changnav(1)">优选好房</p>
     </div>
     <div class="flex" v-show="active==0">
-
+      <p class="err" v-show="showssa">暂无数据</p>
 <!--    <div class="list lists" v-for="(item ,index ) in publis">-->
-        <router-link :to="{path:'buildingdetails',query: { id: item.houses_new_id}}" tag="div"  v-for="(item ,index ) in publis" class="list lists">
-        <p class="no" @click="nostar(item.id)">取消收藏</p>
+        <div  v-for="(item ,index ) in publis" class="list lists">
+        <p class="no" @click="nostar(item.id,1)">取消收藏</p>
         <div class="img">
             <img :src="item.house_picture" alt="">
         </div>
-        <div class="cont">
+        <router-link :to="{path:'buildingdetails',query: { id: item.houses_new_id}}" tag="div"  class="cont">
             <h1 class="name">{{item.mansion_name}}</h1>
             <p class="money">{{item.money}}{{item.money_unit}}</p>
             <p class="map">[{{item.region_cityname}} - {{item.region_name}}]</p>
-        </div>
         </router-link>
+        </div>
 <!--    </div>-->
      <div class="list "></div>
      <div class="list "></div>
      <div class="list "></div>
     </div>
     <div class="flex" v-show="active==1">
-        <router-link :to="{path:'details',query: { id: item.houses_new_id}}" tag="div"  v-for="(item ,index ) in goodss" class="list lists">
+      <p class="err" v-show="showss">暂无数据</p>
+        <div  v-for="(item ,index ) in  goodss" class="list lists">
 <!--        <div class="list lists" v-for="(item ,index ) in goodss">-->
-            <p class="no" @click="nostar(item.id)">取消收藏</p>
+            <p class="no" @click="nostar(item.id,2)">取消收藏</p>
             <div class="img">
                 <img :src="item.house_picture" alt="">
             </div>
-            <div class="cont">
+            <router-link  class="cont" :to="{path:'details',query: { id: item.houses_new_id}}" tag="div">
                 <h1 class="name">{{item.work_name}}</h1>
                 <p class="money">{{item.money}}{{item.money_unit}}</p>
                 <p class="map">[{{item.region_cityname}} - {{item.region_name}}]</p>
-            </div>
+            </router-link >
 <!--        </div>-->
-        </router-link>
+        </div>
         <div class="list "></div>
         <div class="list "></div>
         <div class="list "></div>
     </div>
 </div>
     </div>
+
 </template>
 
 <script>
@@ -53,6 +55,8 @@
         name: "Collection",
         data(){
             return{
+              showss:false,
+			  showssa:false,
                 active:0,
                 publis:[],
                 goodss:[]
@@ -62,7 +66,14 @@
             changnav(ids){
                 this.active=ids
             },
-            nostar(idss){
+            nostar(idss , num){
+			
+			  this.$confirm('确认取消收藏', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+       
                 this.$axios.post("attention/deleteByPrimaryKey.action", {
                     id:idss
                     // houses_new_id:
@@ -77,15 +88,27 @@
                         }
 
                     })
-                    .catch(error => {
-                        console.log(error)
-                    })
+          this.$message({
+            type: 'success',
+            message: '取消收藏成功!'
+          });
+		  if(num==1){
+		    this.publi()
+		  }
+		  if(num==2){
+		      this.goods()
+		  }
+        }).catch(() => {
+
+        });
+			
+              
             },
             publi(){
 
                 this.$axios.post("attention/selectScend.action", {
                     user_phone:sessionStorage.getItem("Skytell"),
-                    type:2
+                    type:1
                     // houses_new_id:
                 })
                     .then(res => {
@@ -120,7 +143,13 @@
 
                         }
                         if(res.data.code==-1){
-                            alert("暂无数据")
+                         //   alert("暂无数据")
+                          this.publis=[]
+                          this.showssa=true
+                        }
+						 if(res.data.code==0){
+                         //   alert("暂无数据")
+                          this.showssa=false
                         }
 
                     })
@@ -132,7 +161,7 @@
 
                 this.$axios.post("attention/selectThird.action", {
                     user_phone:sessionStorage.getItem("Skytell"),
-                    type:1
+                    type:2
                     // houses_new_id:
                 })
                     .then(res => {
@@ -169,7 +198,13 @@
                             }
                         }
                         if(res.data.code==-1){
-                            alert("暂无数据")
+                          //  alert("暂无数据")
+                          this.goodss=[]
+                          this.showss=true
+                        }
+						   if(res.data.code==0){
+                          //  alert("暂无数据")
+                          this.showss=false
                         }
 
                     })
@@ -189,6 +224,14 @@
 </script>
 
 <style scoped>
+  .list{cursor: pointer;}
+  .err{
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin-top: 50px;
+    color: #6f7170;
+  }
     .list{width: 24%;position: relative;margin-bottom: 20px;transition: all .4s;padding: 10px;box-sizing: border-box }
     .list.lists{width: 24%;position: relative;margin-bottom: 20px;transition: all .4s;padding: 10px;box-sizing: border-box }
 .list.lists .img{height: 200px; overflow: hidden;}
@@ -196,7 +239,7 @@
 .list.lists:hover{transform: translate3d(0, -3px, 0);
     box-shadow: 0 4px 16px 0 rgba(0,0,0,0.15);}
 
-    .list.lists .no{position: absolute;width:85px;height:35px;line-height:35px;color: #fff;text-align: center;right:10px;top:10px;background: rgba(0,0,0,0.5)}
+    .list.lists .no{position: absolute;width:85px;height:35px;line-height:35px;color: #fff;text-align: center;right:10px;top:10px;background: rgba(0,0,0,0.5);cursor: pointer;z-index: 999}
 .nav{display: inline-block;    padding:10px 40px; position: relative;cursor: pointer;transition: all .4s;border-bottom:2px solid transparent;}
 .nav:hover{color: #1EAD69}
 .nav.active{border-bottom:2px solid #1EAD69;  color: #1EAD69;}

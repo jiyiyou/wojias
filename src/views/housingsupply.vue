@@ -79,6 +79,7 @@
                 }
             };
             var validatelp = (rule, value, callback) => {
+               // alert(this.formcont.lp)
                 console.log(this.formcont.lp)
                 if (!this.formcont.lp) {
                     return callback(new Error('楼盘名称不能为空'));
@@ -231,7 +232,20 @@
                             type: 'success'
                         });
                           let timer = setInterval(() => {
-                                   location.replace(location)
+                                     this.formcont.lp="",
+                                     this.formcont.cityId="",
+                                     this.formcont.city="",
+                                     this.formcont.areaId="",
+                                     this.formcont.area="",
+                                     this.formcont.provinceId="",
+                                     this.formcont.province,
+                                     this.formcont.map="",
+                                     this.formcont.money="",
+                                     this.formcont.seleqws="",
+                                     this.formcont.username="",
+                                     this.formcont.tell="",
+                                     this.formcont.m="",
+                                    this.formcont.selectedOptions=[]
                                 }, 1200)
 
 

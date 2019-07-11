@@ -7,7 +7,7 @@
 <!--          -->
 <!--        </div>-->
                <el-input placeholder="区域/商圈/写字楼名称" v-model="inputSeach" class="input-with-select inputss">
-        <el-button slot="append" icon="el-icon-search " class="btntop"></el-button>
+        <el-button slot="append" icon="el-icon-search " class="btntop" @click="seachs"></el-button>
                </el-input>
         <p class="seach-class flex">
           <router-link exact tag="a" :to="{path:'/homelist'}">
@@ -33,25 +33,25 @@
 
     <div class="section1 wrap flex">
       <div class="sec1-list">
-        <div class="imgbox"><img :src="sec1box[0].img||''" alt="">
-          <div class="Mask"><p>{{sec1box[0].introduce}}</p></div>
+        <div class="imgbox"><img :src="sec1box[0]?sec1box[0].img:''" alt="">
+          <div class="Mask"><p>{{sec1box[0]?sec1box[0].introduce:""}}</p></div>
         </div>
         <div class="Line"><img src="../assets/index/sec1ico1.png" alt="">
-          <p>{{sec1box[0].name}}</p></div>
+          <p>{{sec1box[0]?sec1box[0].name:""}}</p></div>
       </div>
       <div class="sec1-list">
-        <div class="imgbox"><img :src="sec1box[1].img||''" alt="">
-          <div class="Mask"><p>{{sec1box[1].introduce}}</p></div>
+        <div class="imgbox"><img :src="sec1box[1]?sec1box[1].img:''" alt="">
+          <div class="Mask"><p>{{sec1box[1]?sec1box[1].introduce:""}}</p></div>
         </div>
         <div class="Line"><img src="../assets/index/sec1ico2.png" alt="">
-          <p>{{sec1box[1].name}}</p></div>
+          <p>{{sec1box[1]?sec1box[1].name:""}}</p></div>
       </div>
       <div class="sec1-list">
-        <div class="imgbox"><img :src="sec1box[2].img||''" alt="">
-          <div class="Mask"><p>{{sec1box[2].introduce}}</p></div>
+        <div class="imgbox"><img :src="sec1box[2]?sec1box[2].img:''" alt="">
+          <div class="Mask"><p>{{sec1box[2]?sec1box[2].introduce:""}}</p></div>
         </div>
         <div class="Line"><img src="../assets/index/sec1ico3.png" alt="">
-          <p>{{sec1box[2].name}}</p></div>
+          <p>{{sec1box[2]?sec1box[2].name:""}}</p></div>
       </div>
     </div>
 
@@ -68,13 +68,13 @@
 
     <div class="section3 wrap flex">
       <router-link :to="{path:'buildingdetails',query: { id: item.building_id}}" tag="div" class="sec3-list"
-                   v-for="(item,index) in sec2box">
+                   v-for="(item,index) in sec2box" v-show="index<6">
         <a href="">
           <div class="img-box"><img :src="item.img||''" alt=""></div>
           <div class="cont">
             <p class="name">{{item.name}}</p>
             <p class="introduce">{{item.introduce}}</p>
-            <p class="map"><img src="../assets/index/map.png" alt="">{{item.building.region_shname}}-{{item.building.region_cityname}}-{{item.building.region_name}}
+            <p class="map"><img src="../assets/index/map.png" alt="">{{item.building?item.building.region_shname:""}}-{{item.building?item.building.region_cityname:""}}-{{item.building?item.building.region_name:""}}
             </p>
           </div>
         </a>
@@ -159,84 +159,87 @@
     </div>
 
     <div class="section7 wrap">
-      <a href=""><img src="../assets/index/sec7.png" alt=""></a>
+      <router-link exact tag="a" :to="{path:'/Entrust'}" >
+        <img src="../assets/index/sec7.png" alt="">
+      </router-link>
+
     </div>
 
-    <div class="section8 wrap">
-      <div class="sec8nav-box flex">
-        <p class="sec8nav" :class="{ active: type=='sl' }" @click="toggleType('sl')">我们的实力 <span></span></p>
-        <p class="sec8nav" :class="{ active: type=='cn' }" @click="toggleType('cn')">我们的承诺 <span></span></p>
-        <p class="sec8nav" :class="{ active: type=='ys' }" @click="toggleType('ys')">我们的优势 <span></span></p>
-      </div>
-      <div class="sec8cont-box">
-        <div class="sec8coont flex" v-if="active=='sl'">
-          <div class="sec8cont-list">
-            <img src="../assets/index/sec8.png" alt="">
-            <h1>1全程免拥</h1>
-            <p>看房全程免除拥金</p>
-          </div>
-          <div class="sec8cont-list">
-            <img src="../assets/index/sec8.png" alt="">
-            <h1>全程免拥</h1>
-            <p>看房全程免除拥金</p>
-          </div>
-          <div class="sec8cont-list">
-            <img src="../assets/index/sec8.png" alt="">
-            <h1>全程免拥</h1>
-            <p>看房全程免除拥金</p>
-          </div>
-          <div class="sec8cont-list">
-            <img src="../assets/index/sec8.png" alt="">
-            <h1>全程免拥</h1>
-            <p>看房全程免除拥金</p>
-          </div>
-        </div>
-        <div class="sec8coont flex" v-if="active=='cn'">
-          <div class="sec8cont-list">
-            <img src="../assets/index/sec8.png" alt="">
-            <h1>2全程免拥</h1>
-            <p>看房全程免除拥金</p>
-          </div>
-          <div class="sec8cont-list">
-            <img src="../assets/index/sec8.png" alt="">
-            <h1>全程免拥</h1>
-            <p>看房全程免除拥金</p>
-          </div>
-          <div class="sec8cont-list">
-            <img src="../assets/index/sec8.png" alt="">
-            <h1>全程免拥</h1>
-            <p>看房全程免除拥金</p>
-          </div>
-          <div class="sec8cont-list">
-            <img src="../assets/index/sec8.png" alt="">
-            <h1>全程免拥</h1>
-            <p>看房全程免除拥金</p>
-          </div>
-        </div>
-        <div class="sec8coont flex" v-if="active=='ys'">
-          <div class="sec8cont-list">
-            <img src="../assets/index/sec8.png" alt="">
-            <h1>3全程免拥</h1>
-            <p>看房全程免除拥金</p>
-          </div>
-          <div class="sec8cont-list">
-            <img src="../assets/index/sec8.png" alt="">
-            <h1>全程免拥</h1>
-            <p>看房全程免除拥金</p>
-          </div>
-          <div class="sec8cont-list">
-            <img src="../assets/index/sec8.png" alt="">
-            <h1>全程免拥</h1>
-            <p>看房全程免除拥金</p>
-          </div>
-          <div class="sec8cont-list">
-            <img src="../assets/index/sec8.png" alt="">
-            <h1>全程免拥</h1>
-            <p>看房全程免除拥金</p>
-          </div>
-        </div>
-      </div>
-    </div>
+<!--    <div class="section8 wrap">-->
+<!--      <div class="sec8nav-box flex">-->
+<!--        <p class="sec8nav" :class="{ active: type==1 }" @click="toggleType(1)">我们的实力 <span></span></p>-->
+<!--        <p class="sec8nav" :class="{ active: type==2 }" @click="toggleType(2)">我们的承诺 <span></span></p>-->
+<!--        <p class="sec8nav" :class="{ active: type==3 }" @click="toggleType(3)">我们的优势 <span></span></p>-->
+<!--      </div>-->
+<!--      <div class="sec8cont-box">-->
+<!--        <div class="sec8coont flex" v-if="type==1">-->
+<!--          <div class="sec8cont-list">-->
+<!--            <img src="../assets/index/sec8.png" alt="">-->
+<!--            <h1>1全程免拥</h1>-->
+<!--            <p>看房全程免除拥金</p>-->
+<!--          </div>-->
+<!--          <div class="sec8cont-list">-->
+<!--            <img src="../assets/index/sec8.png" alt="">-->
+<!--            <h1>全程免拥</h1>-->
+<!--            <p>看房全程免除拥金</p>-->
+<!--          </div>-->
+<!--          <div class="sec8cont-list">-->
+<!--            <img src="../assets/index/sec8.png" alt="">-->
+<!--            <h1>全程免拥</h1>-->
+<!--            <p>看房全程免除拥金</p>-->
+<!--          </div>-->
+<!--          <div class="sec8cont-list">-->
+<!--            <img src="../assets/index/sec8.png" alt="">-->
+<!--            <h1>全程免拥</h1>-->
+<!--            <p>看房全程免除拥金</p>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="sec8coont flex" v-if="type==2">-->
+<!--          <div class="sec8cont-list">-->
+<!--            <img src="../assets/index/sec8.png" alt="">-->
+<!--            <h1>2全程免拥</h1>-->
+<!--            <p>看房全程免除拥金</p>-->
+<!--          </div>-->
+<!--          <div class="sec8cont-list">-->
+<!--            <img src="../assets/index/sec8.png" alt="">-->
+<!--            <h1>全程免拥</h1>-->
+<!--            <p>看房全程免除拥金</p>-->
+<!--          </div>-->
+<!--          <div class="sec8cont-list">-->
+<!--            <img src="../assets/index/sec8.png" alt="">-->
+<!--            <h1>全程免拥</h1>-->
+<!--            <p>看房全程免除拥金</p>-->
+<!--          </div>-->
+<!--          <div class="sec8cont-list">-->
+<!--            <img src="../assets/index/sec8.png" alt="">-->
+<!--            <h1>全程免拥</h1>-->
+<!--            <p>看房全程免除拥金</p>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="sec8coont flex" v-if="type==3">-->
+<!--          <div class="sec8cont-list">-->
+<!--            <img src="../assets/index/sec8.png" alt="">-->
+<!--            <h1>3全程免拥</h1>-->
+<!--            <p>看房全程免除拥金</p>-->
+<!--          </div>-->
+<!--          <div class="sec8cont-list">-->
+<!--            <img src="../assets/index/sec8.png" alt="">-->
+<!--            <h1>全程免拥</h1>-->
+<!--            <p>看房全程免除拥金</p>-->
+<!--          </div>-->
+<!--          <div class="sec8cont-list">-->
+<!--            <img src="../assets/index/sec8.png" alt="">-->
+<!--            <h1>全程免拥</h1>-->
+<!--            <p>看房全程免除拥金</p>-->
+<!--          </div>-->
+<!--          <div class="sec8cont-list">-->
+<!--            <img src="../assets/index/sec8.png" alt="">-->
+<!--            <h1>全程免拥</h1>-->
+<!--            <p>看房全程免除拥金</p>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
 
 
   </div>
@@ -252,8 +255,8 @@
         show3: false,
         showcity: "c2",
         inputSeach: "",
-        type: "sl",
-        active: "sl",
+        type: 1,
+        active:1,
         sec1box: [],
         sec2box: [],
         sec3box: [],
@@ -276,6 +279,9 @@
       }
     },
     methods: {
+      seachs(){
+        this.$router.push({path:'/seachList' , query: {seachs:this.inputSeach}})
+      },
       formatData(now) {
         var date = new Date(now);
         var year = date.getFullYear();
@@ -286,8 +292,6 @@
         return year + '-' + month + '-' + day;
       },
       indexcont(ids) {
-        console.log(sessionStorage.getItem("Skycity"))
-        //alert(sessionStorage.getItem("Skycityid"))
         this.$axios.post("main/homePageRecommended.action", {
           cityId: sessionStorage.getItem("Skycityid"),
           type: ids
@@ -296,22 +300,21 @@
             console.log(res)
             if (ids == 1) {
               this.sec1box = res.data.data
+
             }
             if (ids == 2) {
               this.sec2box = res.data.data
             }
             if (ids == 3) {
               this.sec3box = res.data.data
-              console.log(11)
-console.log(this.sec3box)
+
               for (let j = 0; j < this.sec3box.length; j++) {
-                //alert(this.likelist[j].housesNew.money_unit)
+
                 if(this.sec3box[j].housesNew.money_unit){
                 if (this.sec3box[j].housesNew.money_unit == "1") {
                   this.sec3box[j].housesNew.money_unit = "元/月"
                 }
                 if (this.sec3box[j].housesNew.money_unit == "2") {
-                  //alert(this.likelist[j].money_unit)
                   this.sec3box[j].housesNew.money_unit = "元/㎡/天"
                 }
                 if (this.sec3box[j].housesNew.money_unit == "3") {
@@ -329,12 +332,7 @@ console.log(this.sec3box)
               }
               }
             }
-            console.log(this.sec1box)
-            console.log(this.sec2box)
-            console.log(this.sec3box)
             // this.citynum = res.data.data
-            // console.log(res.data.data);
-            // console.log(this.citynum)
           })
           .catch(error => {
             console.log(error)
@@ -362,9 +360,7 @@ console.log(this.sec3box)
           // phone_number: this.formcont.tell
         })
           .then(res => {
-            console.log(123);
             this.newbox = res.data.data
-            console.log(this.newbox);
           })
           .catch(error => {
             console.log(error)
@@ -376,7 +372,7 @@ console.log(this.sec3box)
         this.indexcont(1)
         this.indexcont(2)
         this.indexcont(3)
-      }, 1500)
+      }, 1000)
 
       this.newboxs()
     },
@@ -454,7 +450,8 @@ console.log(this.sec3box)
 
   .sec1-list .imgbox img {
     display: block;
-    width: 100%
+    width: 100%;
+    height:500px
   }
 
   .sec1-list .imgbox:hover .Mask {
@@ -481,7 +478,7 @@ console.log(this.sec3box)
     margin: 0 auto;
     color: #fff;
     line-height: 2;
-    margin-top: 50%;
+    margin-top: 10%;
   }
 
   .sec1-list:nth-child(2) .imgbox {
@@ -577,12 +574,14 @@ console.log(this.sec3box)
 
   .section3 .sec3-list .cont .introduce {
     margin-top: 10px;
-    color: #999
+    color: #999;
+    word-break:break-all;overflow: hidden;display: -webkit-box;-webkit-line-clamp: 3;-webkit-box-orient: vertical;
   }
 
   .section3 .sec3-list .cont .map {
     text-align: right;
-    color: #8c8fa7
+    color: #8c8fa7;
+    margin-top:10px
   }
 
   .section3 .sec3-list .cont .map img {
@@ -777,7 +776,8 @@ console.log(this.sec3box)
   .sec5-right .newCont {
     font-size: 18px;
     line-height: 2;
-    transition: all .4s
+    transition: all .4s;
+    word-break:break-all;overflow: hidden;display: -webkit-box;-webkit-line-clamp: 3;-webkit-box-orient: vertical;
   }
 
   .sec5-right .newCont:hover {

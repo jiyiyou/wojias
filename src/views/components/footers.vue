@@ -1,4 +1,5 @@
 <template>
+<div>
 <div class="footer flex">
     <div class="left">
         <a href="" class="logo"><img src="../../assets/public/logo.png" alt=""></a>
@@ -16,17 +17,20 @@
     <div class="right">
         <p>友情链接：</p>
         <div class="fot-rita">
-            <a href="">友情链接</a>
-            <a href="">友情链接</a>
-            <a href="">友情链接</a>
-            <a href="">友情链接</a>
-            <a href="">友情链接</a>
-            <a href="">友情链接</a>
-            <a href="">友情链接</a>
-            <a href="">友情链接</a>
+
+            <a href="/back/index.html">经纪人</a>
+<!--            <a href="">友情链接</a>-->
+<!--            <a href="">友情链接</a>-->
+<!--            <a href="">友情链接</a>-->
+<!--            <a href="">友情链接</a>-->
+<!--            <a href="">友情链接</a>-->
+<!--            <a href="">友情链接</a>-->
+<!--            <a href="">友情链接</a>-->
         </div>
     </div>
-</div>    
+</div>
+    <div class="foot"><span>©2017 天下没有难租的房 All rights resered | 喔家 | 冀ICP备17013139号 |</span></div>
+</div>
 </template>
 <script>
 export default {
@@ -38,3 +42,7 @@ export default {
     }
 }
 </script>
+<style>
+    .foot{color:#fff;line-height: 30px;    background: #434a45;
+        text-align: center;}
+</style>
